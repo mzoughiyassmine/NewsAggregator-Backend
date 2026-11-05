@@ -1,3 +1,4 @@
+
 package com.example.news_agg_backend.model;
 
 import lombok.AllArgsConstructor;
@@ -7,6 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Document(collection = "users")
 @Getter
@@ -23,10 +27,21 @@ public class User {
 
     private String email;
 
-    // Contient le mot de passe HACHÉ (BCrypt), jamais le mot de passe en clair
     private String password;
 
     private Role role;
 
     private AccountStatus status;
+
+    @Builder.Default
+    private boolean emailVerified = false;
+
+    @Builder.Default
+    private List<String> topicCodes = List.of();
+
+    @Builder.Default
+    private String language = "fr";
+
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 }

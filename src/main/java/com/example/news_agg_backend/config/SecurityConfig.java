@@ -1,3 +1,4 @@
+
 package com.example.news_agg_backend.config;
 
 import com.example.news_agg_backend.repository.UserRepository;
@@ -31,8 +32,27 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/test", "/api/auth/login").permitAll()
+
+                        // Public endpoints
+                        .requestMatchers(
+                                "/api/test",
+                                "/api/auth/login",
+                                "/api/auth/register",
+                                "/api/auth/reader/login",
+                                "/api/auth/forgot-password",
+                                "/api/auth/reset-password",
+                                "/api/auth/send-registration-code",
+                                "/api/auth/verify-registration-code",
+                                "/api/topics"
+                        ).permitAll()
+
+                        // Admin endpoints
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                        // Reader endpoints
+                        .requestMatchers("/api/reader/**").hasRole("READER")
+
+                        // All other endpoints
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
