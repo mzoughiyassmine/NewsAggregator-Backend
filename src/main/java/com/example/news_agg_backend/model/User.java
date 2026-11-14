@@ -29,4 +29,7 @@ public class User {
     private Role role;
 
     private AccountStatus status;
+
+    // Passe à true quand l'utilisateur a saisi le bon code reçu par e-mail
+    private boolean emailVerified;
 }
