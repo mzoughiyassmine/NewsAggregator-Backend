@@ -43,7 +43,28 @@ public class AuthService {
         String token = jwtService.generateToken(user);
         return new LoginResponse(token, user.getName(), user.getEmail(), user.getRole());
     }
+    public LoginResponse readerLogin(LoginRequest request) {
+        String email = request.email().trim().toLowerCase();
 
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(this::invalidCredentials);
+
+        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw invalidCredentials();
+        }
+
+        if (user.getRole() != Role.READER) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Utilisez l'espace administrateur");
+        }
+
+        if (user.getStatus() != AccountStatus.ACTIVE) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Compte bloqué");
+        }
+
+        String token = jwtService.generateToken(user);
+        return new LoginResponse(token, user.getName(), user.getEmail(), user.getRole());
+    }
     private ResponseStatusException invalidCredentials() {
         return new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                 "Email ou mot de passe incorrect");

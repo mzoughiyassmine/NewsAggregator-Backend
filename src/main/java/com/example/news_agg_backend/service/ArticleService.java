@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import java.util.Collection;
 
 @Service
 @RequiredArgsConstructor
@@ -37,5 +38,23 @@ public class ArticleService {
                 result.getTotalElements(),
                 result.getTotalPages()
         );
+    }
+    public ArticlePageResponse findFeed(Collection<String> categoryIds, int page, int size) {
+        int safePage = Math.max(page, 0);
+        int safeSize = Math.min(Math.max(size, 1), MAX_PAGE_SIZE);
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "publishedAt")
+                .and(Sort.by(Sort.Direction.DESC, "collectedAt"))
+                .and(Sort.by(Sort.Direction.DESC, "id"));
+        Pageable pageable = PageRequest.of(safePage, safeSize, sort);
+
+        Page<Article> result = (categoryIds == null || categoryIds.isEmpty())
+                ? Page.empty(pageable)
+                : articleRepository.findByCategoryIdIn(categoryIds, pageable);
+
+        return new ArticlePageResponse(
+                result.getContent().stream().map(ArticleResponse::from).toList(),
+                result.getNumber(), result.getSize(),
+                result.getTotalElements(), result.getTotalPages());
     }
 }

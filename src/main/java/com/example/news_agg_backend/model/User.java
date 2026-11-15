@@ -8,6 +8,9 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Document(collection = "users")
 @Getter
 @Setter
@@ -32,4 +35,8 @@ public class User {
 
     // Passe à true quand l'utilisateur a saisi le bon code reçu par e-mail
     private boolean emailVerified;
+
+    // Centres d'intérêt choisis à l'inscription (codes des topics créés par l'admin)
+    @Builder.Default
+    private List<String> categoryIds = new ArrayList<>();
 }
