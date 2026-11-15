@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -33,13 +35,15 @@ public class AuthController {
     }
 
     @PostMapping("/send-registration-code")
-    public void sendRegistrationCode(@Valid @RequestBody SendRegistrationCodeRequest request) {
+    public Map<String, String> sendRegistrationCode(@Valid @RequestBody SendRegistrationCodeRequest request) {
         registrationService.sendCode(request.email());
+        return Map.of("message", "Code envoyé");
     }
 
     @PostMapping("/verify-registration-code")
-    public void verifyRegistrationCode(@Valid @RequestBody VerifyRegistrationCodeRequest request) {
+    public Map<String, String> verifyRegistrationCode(@Valid @RequestBody VerifyRegistrationCodeRequest request) {
         registrationService.verifyCode(request.email(), request.code());
+        return Map.of("message", "E-mail vérifié");
     }
 
     @PostMapping("/register")
