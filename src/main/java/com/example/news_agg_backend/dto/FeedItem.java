@@ -7,6 +7,6 @@ public record FeedItem(
         String title,
         String link,
         String description,
-        LocalDateTime publishedAt
-) {
-}
+        LocalDateTime publishedAt,
+        String imageUrl
+) {}

@@ -21,6 +21,8 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import org.springframework.mail.MailException;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -38,6 +40,9 @@ public class RegistrationService {
     private final RegistrationCodeRepository codeRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+
+    private final EmailService emailService;
+
 
     public void sendCode(String rawEmail) {
         String email = normalize(rawEmail);
@@ -58,8 +63,16 @@ public class RegistrationService {
                 .verified(false)
                 .build());
 
-        // DEV UNIQUEMENT : à remplacer par un envoi d'e-mail, puis à supprimer
+        // À supprimer une fois l'envoi d'e-mail validé : un code en clair ne doit pas rester dans les logs
         log.info("Code de vérification pour {} : {}", email, code);
+
+        try {
+            emailService.sendRegistrationCode(email, code);        } catch (MailException e) {
+            codeRepository.deleteByEmail(email);
+            log.error("Échec d'envoi de l'e-mail à {}", email, e);
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
+                    "Impossible d'envoyer l'e-mail de vérification. Réessayez plus tard.");
+        }
     }
 
     public void verifyCode(String rawEmail, String code) {

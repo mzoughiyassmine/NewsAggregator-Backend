@@ -14,7 +14,9 @@ public record ArticleResponse(
         String sourceName,
         String categoryId,
         String categoryName,
-        LocalDateTime collectedAt
+        LocalDateTime collectedAt,
+        String imageUrl   // à la fin des composants du record
+
 ) {
 
     public static ArticleResponse from(Article article) {
@@ -28,7 +30,8 @@ public record ArticleResponse(
                 article.getSourceName(),
                 article.getCategoryId(),
                 article.getCategoryName(),
-                article.getCollectedAt()
+                article.getCollectedAt(),
+                article.getImageUrl()   // au même endroit dans l'appel du constructeur de from()
         );
     }
 }

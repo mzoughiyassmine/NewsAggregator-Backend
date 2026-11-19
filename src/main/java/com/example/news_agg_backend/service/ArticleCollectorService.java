@@ -81,6 +81,7 @@ public class ArticleCollectorService {
                     .categoryId(category != null ? category.getId() : null)
                     .categoryName(category != null ? category.getName() : null)
                     .collectedAt(LocalDateTime.now())
+                    .imageUrl(item.imageUrl())
                     .build();
 
             try {

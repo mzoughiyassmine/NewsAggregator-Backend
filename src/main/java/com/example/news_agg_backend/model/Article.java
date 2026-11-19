@@ -44,4 +44,7 @@ public class Article {
     // Catégorie attribuée automatiquement (US14)
     private String categoryId;
     private String categoryName;
+
+    // URL de l'image de l'article (peut être nulle si le flux n'en fournit pas)
+    private String imageUrl;
 }

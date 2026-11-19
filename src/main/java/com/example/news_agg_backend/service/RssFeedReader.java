@@ -76,8 +76,8 @@ public class RssFeedReader {
         String description = content != null ? clean(content.getValue()) : null;
         Date date = entry.getPublishedDate() != null ? entry.getPublishedDate() : entry.getUpdatedDate();
 
-        return new FeedItem(title, link, description, toLocalDateTime(date));
-    }
+        return new FeedItem(title, link, description, toLocalDateTime(date),
+                ArticleImageExtractor.extract(entry));    }
 
     private LocalDateTime toLocalDateTime(Date date) {
         return date == null ? null : LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
